@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row mt-4 mt-5" >
+        <div class="col-3" style="margin-bottom:25px">
+            <h2>Ether Price</h2>
+             $ {{ ethereum_price['last'] }} 
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-6">
+            <h3>
+                Latest Blocks
+            </h3>
+
+            <table class="table table-striped">
+                {% for block in latest_blocks %}
+
+                <tr>
+                    <td>
+                        <h5>Block</h5>
+                        <a href="/block/{{ block.number }}"> {{ block_number }}</a>
+                        <p>
+                            {{ (current_time - block.timestamp) | int }} seconds ago
+
+                        </p>
+                    </td>
+
+                    <td>
+                        <h5>
+                            Miner 
+                        </h5>
+
+                        <a style="text-decoration: none;" href="/address?address={{ block.miner }}"> 
+                            {% if block.miner.lower() in miners %}
+                                {{ miners[block.miner.lower()] }} 
+                            {% else %}
+                                {{ block.miner.lower() }}
+                            {% endif %}</a>
+
+                        </a>
+
+                        <p>
+                            {{ block.transactions|length }} transactions 
+                        </p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-6">
+            <h3>Latest Transactions</h3>
+            <table class="table table-striped">
+                {% for transaction in latest_transactions %}
+                <tr>
+                    <td>
+                        <h5>Hash</h5>
+                        <p>
+                            <a style="text-decoration: none;" href="/transaction/{{ transaction['hash'].hex() }}">
+                                {{ transaction['hash'].hex() }}
+                            </a>
+                        </p>
+                        <p>
+                            <strong>From</strong>
+
+                            <a style="text-decoration: none;" href="/address?address={{ transaction['from'] }}">
+                                {{ transaction['from'] }}
+                            </a>
+                        </p>
+                        
+                        <p>
+                            <strong>To</strong>
+                            <a style="text-decoration: none;" href="/address?address={{ transaction['from'] }}">
+                                {{ transaction['to'] }}
+                            </a>
+                        </p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} 
+
+
